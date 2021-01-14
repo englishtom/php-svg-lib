@@ -425,62 +425,71 @@ class SurfaceCpdf implements SurfaceInterface
         $this->setFont($style->fontFamily, $style->fontStyle, $style->fontWeight);
     }
 
-    public function setFont($family, $style, $weight)
-    {
-        $map = array(
-            "serif"      => "Times",
-            "sans-serif" => "Helvetica",
-            "fantasy"    => "Symbol",
-            "cursive"    => "Times",
-            "monospace"  => "Courier",
-
-            "arial"      => "Helvetica",
-            "verdana"    => "Helvetica",
-        );
-
-        $styleMap = array(
-            'Helvetica' => array(
-                'b'  => 'Helvetica-Bold',
-                'i'  => 'Helvetica-Oblique',
-                'bi' => 'Helvetica-BoldOblique',
-            ),
-            'Courier' => array(
-                'b'  => 'Courier-Bold',
-                'i'  => 'Courier-Oblique',
-                'bi' => 'Courier-BoldOblique',
-            ),
-            'Times' => array(
-                ''   => 'Times-Roman',
-                'b'  => 'Times-Bold',
-                'i'  => 'Times-Italic',
-                'bi' => 'Times-BoldItalic',
-            ),
-        );
-
+    public function setFont($family, $style, $weight){
         $family = strtolower($family);
-        $style  = strtolower($style);
-        $weight = strtolower($weight);
-
-        if (isset($map[$family])) {
-            $family = $map[$family];
+        // Am I allowed to access canvas fonts this way????
+        foreach($this->canvas->fonts as $font => $data){
+            $font_family = strtolower($data['FontName']);
+            if($font_family === $family) $this->canvas->selectFont($font);
         }
-
-        if (isset($styleMap[$family])) {
-            $key = "";
-
-            if ($weight === "bold" || $weight === "bolder" || (is_numeric($weight) && $weight >= 600)) {
-                $key .= "b";
-            }
-
-            if ($style === "italic" || $style === "oblique") {
-                $key .= "i";
-            }
-
-            if (isset($styleMap[$family][$key])) {
-                $family = $styleMap[$family][$key];
-            }
-        }
-
-        $this->canvas->selectFont("$family.afm");
     }
+
+    //public function setFont($family, $style, $weight)
+    //{
+        //$map = array(
+            //"serif"      => "Times",
+            //"sans-serif" => "Helvetica",
+            //"fantasy"    => "Symbol",
+            //"cursive"    => "Times",
+            //"monospace"  => "Courier",
+
+            //"arial"      => "Helvetica",
+            //"verdana"    => "Helvetica",
+        //);
+
+        //$styleMap = array(
+            //'Helvetica' => array(
+                //'b'  => 'Helvetica-Bold',
+                //'i'  => 'Helvetica-Oblique',
+                //'bi' => 'Helvetica-BoldOblique',
+            //),
+            //'Courier' => array(
+                //'b'  => 'Courier-Bold',
+                //'i'  => 'Courier-Oblique',
+                //'bi' => 'Courier-BoldOblique',
+            //),
+            //'Times' => array(
+                //''   => 'Times-Roman',
+                //'b'  => 'Times-Bold',
+                //'i'  => 'Times-Italic',
+                //'bi' => 'Times-BoldItalic',
+            //),
+        //);
+
+        //$family = strtolower($family);
+        //$style  = strtolower($style);
+        //$weight = strtolower($weight);
+
+        //if (isset($map[$family])) {
+            //$family = $map[$family];
+        //}
+
+        //if (isset($styleMap[$family])) {
+            //$key = "";
+
+            //if ($weight === "bold" || $weight === "bolder" || (is_numeric($weight) && $weight >= 600)) {
+                //$key .= "b";
+            //}
+
+            //if ($style === "italic" || $style === "oblique") {
+                //$key .= "i";
+            //}
+
+            //if (isset($styleMap[$family][$key])) {
+                //$family = $styleMap[$family][$key];
+            //}
+        //}
+
+        //$this->canvas->selectFont("$family.afm");
+    //}
 }
